@@ -16,7 +16,6 @@ function BudgetMateDashboard() {
 
   const API_BASE = "http://localhost:5000";
 
-  // Load stored budget
   useEffect(() => {
     const saved = localStorage.getItem("monthlyBudget");
     if (saved) setMonthlyBudget(parseFloat(saved));
@@ -52,7 +51,6 @@ function BudgetMateDashboard() {
     getTransactions();
   }, []);
 
-  // Delete
   const deleteTransaction = async (transactionId) => {
     try {
       await axios.delete(`${API_BASE}/delete-transaction/${transactionId}`);
@@ -64,14 +62,14 @@ function BudgetMateDashboard() {
 
   const handleTransactionUpdate = async (id, newAmount, newCategory) => {
   try {
-    // Send PUT request to update transaction
+ 
     const response = await axios.put(`${API_BASE}/update-transaction/${id}`, {
       category: newCategory,
       amount: newAmount,
     });
 
     if (response.data.success) {
-      // Update state if the transaction was updated successfully
+      
       setTransactions((prev) =>
         prev.map((t) =>
           t.id === id
@@ -101,7 +99,7 @@ const startEdit = (transaction) => {
 
   const cancelEdit = () => setEditingTransactionId(null);
 
-  // Monthly budget editing
+ 
   const startEditBudget = () => {
     setBudgetInput(monthlyBudget !== null ? monthlyBudget.toString() : "");
     setIsEditingBudget(true);
@@ -118,13 +116,13 @@ const startEdit = (transaction) => {
   };
   const cancelEditBudget = () => setIsEditingBudget(false);
 
-  // Logout
+  
   const handleLogout = () => {
     localStorage.removeItem("userId");
     navigate("/");
   };
 
-  // Calculations
+
   const totalExpenses = transactions.reduce(
     (acc, t) => (t.type === "expense" ? acc + t.amount : acc),
     0
@@ -135,7 +133,7 @@ const startEdit = (transaction) => {
   );
   const balance = monthlyBudget - totalExpenses;
 
-  // Category totals
+ 
   const categoryTotals = transactions.reduce((acc, t) => {
     if (t.type === "expense") {
       acc[t.category] = (acc[t.category] || 0) + t.amount;
@@ -147,7 +145,7 @@ const startEdit = (transaction) => {
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-purple-400 to-pink-400 p-4 md:p-6 lg:p-8">
       <div className="max-w-6xl mx-auto">
-        {/* Header */}
+    
         <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
           <h1 className="text-3xl font-bold text-black-800">
             💸 BudgetMate Dashboard
@@ -160,9 +158,9 @@ const startEdit = (transaction) => {
           </button>
         </div>
 
-        {/* Stats */}
+       
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-          {/* Monthly Budget */}
+         
           <div className="bg-white shadow-lg rounded-lg p-6 border-2 border-teal-700">
             <h2 className="text-xs font-semibold text-teal-700 mb-2">
               🎯 Monthly Budget
@@ -220,7 +218,7 @@ const startEdit = (transaction) => {
             )}
           </div>
 
-          {/* Balance */}
+         
           <div className="bg-white shadow-lg rounded-lg p-6 border-2 border-teal-700">
             <h2 className="text-xl font-semibold text-teal-700 mb-2">
               💰 Balance
@@ -230,7 +228,7 @@ const startEdit = (transaction) => {
             </p>
           </div>
 
-          {/* Total Expenses */}
+          
           <div className="bg-white shadow-lg rounded-lg p-6 border-2 border-teal-700">
             <h2 className="text-md font-semibold text-teal-700 mb-2">
               💸 Total Expenses
@@ -240,7 +238,7 @@ const startEdit = (transaction) => {
             </p>
           </div>
 
-          {/* Total Income */}
+         
           <div className="bg-white shadow-lg rounded-lg p-6 border-2 border-teal-700">
             <h2 className="text-md font-semibold text-teal-700 mb-2">
               💵 Total Income
@@ -251,7 +249,7 @@ const startEdit = (transaction) => {
           </div>
         </div>
 
-        {/* Expenses by Category */}
+        
         <div className="bg-white shadow-lg rounded-lg p-6 border-2 border-teal-700 mb-6">
           <h2 className="text-xl font-semibold text-teal-700 mb-4">
             📂 Monthly Expenses
@@ -302,7 +300,7 @@ const startEdit = (transaction) => {
           )}
         </div>
 
-        {/* Transactions List */}
+        
         <div className="bg-white shadow-lg rounded-lg p-6 border-2 border-teal-700">
           <h2 className="text-xl font-semibold text-teal-700 mb-4">
             📊 Transactions
@@ -393,7 +391,7 @@ const startEdit = (transaction) => {
         </div>
       </div>
 
-      {/* Add Modal */}
+     
       {showAddModal && (
         <AddTransactionModal
           hide={() => setShowAddModal(false)}

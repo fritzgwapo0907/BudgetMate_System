@@ -24,7 +24,7 @@ const App = () => {
     const { id } = response.data;
 
     if (id) {
-      localStorage.setItem('id', id); // Save user ID for session tracking
+      localStorage.setItem('id', id); 
       setMessage('Login successful!');
       navigate('/dashboard');
     } else {
@@ -41,7 +41,7 @@ const App = () => {
 
 
 
-  // Handle sign up
+
   const handleSignUp = async (e) => {
     e.preventDefault();
     try {

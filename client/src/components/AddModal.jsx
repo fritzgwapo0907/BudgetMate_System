@@ -4,18 +4,18 @@ import axios from "axios";
 function AddTransactionModal({ hide, refreshTransactions, userId }) {
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
-  const [type, setType] = useState("expense"); // Default type is "expense"
+  const [type, setType] = useState("expense"); 
   const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false); // Loading state for the submit button
+  const [isLoading, setIsLoading] = useState(false); 
 
-  const apiUrl = "http://localhost:5000"; // Adjust your API URL as needed
+  const apiUrl = "http://localhost:5000"; 
 
-  // Handle form submission to add a new transaction
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
 
-    // Input validation
+    
     if (!description || !amount || isNaN(amount) || amount <= 0 || amount.trim() === '') {
       setError("Please fill in all fields correctly.");
       setIsLoading(false);
@@ -25,18 +25,18 @@ function AddTransactionModal({ hide, refreshTransactions, userId }) {
     try {
       const formattedAmount = parseFloat(amount).toFixed(2);
 
-      // Use a valid userId (ensure you have this in your component's props or state)
-      const userId = localStorage.getItem("id"); // ✅ fetch the actual ID
+      
+      const userId = localStorage.getItem("id"); 
 
       const response = await axios.post(`${apiUrl}/add-transaction`, {
-        userId, // Ensure the backend expects `userId`, not `id`
+        userId, 
         description,
         amount: formattedAmount,
         type,
       });
 
       if (response.data.success) {
-        // Reset the form
+       
         setDescription("");
         setAmount("");
         setType("expense");
@@ -58,11 +58,11 @@ function AddTransactionModal({ hide, refreshTransactions, userId }) {
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
         <h2 className="text-xl font-semibold text-teal-700 mb-4">Add Transaction</h2>
 
-        {/* Error message */}
+        
         {error && <p className="text-red-500 mb-4">{error}</p>}
 
         <form onSubmit={handleSubmit}>
-          {/* Description Field */}
+        
           <div className="mb-4">
             <label htmlFor="description" className="block text-sm font-semibold text-gray-700 mb-2">
               Description
@@ -77,7 +77,7 @@ function AddTransactionModal({ hide, refreshTransactions, userId }) {
             />
           </div>
 
-          {/* Amount Field */}
+         
           <div className="mb-4">
             <label htmlFor="amount" className="block text-sm font-semibold text-gray-700 mb-2">
               Amount
@@ -92,7 +92,7 @@ function AddTransactionModal({ hide, refreshTransactions, userId }) {
             />
           </div>
 
-          {/* Type Field */}
+          
           <div className="mb-4">
             <label className="block text-sm font-semibold text-gray-700 mb-2">Transaction Type</label>
             <div className="flex items-center gap-4">
@@ -123,7 +123,7 @@ function AddTransactionModal({ hide, refreshTransactions, userId }) {
             </div>
           </div>
 
-          {/* Submit and Cancel Buttons */}
+        
           <div className="flex justify-between gap-4">
             <button
               type="button"
@@ -135,7 +135,7 @@ function AddTransactionModal({ hide, refreshTransactions, userId }) {
             <button
               type="submit"
               className="bg-teal-500 text-white px-4 py-2 rounded-lg w-full sm:w-auto hover:bg-teal-600"
-              disabled={isLoading} // Disable button while loading
+              disabled={isLoading}
             >
               {isLoading ? 'Adding...' : 'Add Transaction'}
             </button>
