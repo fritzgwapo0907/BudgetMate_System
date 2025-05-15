@@ -6,10 +6,10 @@ from contextlib import closing
 
 app = Flask(__name__)
 
-# CORS configuration - Allow only frontend to access this backend (adjust the frontend URL as needed)
+
 CORS(app, origins="http://localhost:5173", supports_credentials=True)
 
-# Database connection
+
 def get_db_connection():
     return psycopg2.connect(
         host="localhost",
@@ -18,17 +18,17 @@ def get_db_connection():
         password="gwapo"
     )
 
-# Helper to format query results as dicts
+
 def dictfetchall(cursor):
     desc = cursor.description
     return [dict(zip([col[0] for col in desc], row)) for row in cursor.fetchall()]
 
-# Error handler
+
 def handle_error(e):
     return jsonify(success=False, message=str(e), data=None), 500
 
 
-# ------------------ GET ALL DATA (Users and Transactions) ------------------
+
 @app.route('/', methods=['GET'])
 def get_all_data():
     try:
@@ -56,7 +56,7 @@ def get_all_data():
         return handle_error(e)
 
 
-# ------------------ GET ALL USERS ------------------
+
 @app.route('/users', methods=['GET'])
 def get_users():
     try:
@@ -70,7 +70,7 @@ def get_users():
         return handle_error(e)
 
 
-# Register user
+
 @app.route('/add-user', methods=['POST'])
 def add_user():
     data = request.get_json()
@@ -101,7 +101,7 @@ def add_user():
         return handle_error(e)
 
 
-# Login user
+
 @app.route('/check-user', methods=['POST'])
 def check_user():
     data = request.get_json()
@@ -125,7 +125,7 @@ def check_user():
         return handle_error(e)
 
 
-# Add transaction
+
 @app.route('/add-transaction', methods=['POST'])
 def add_transaction():
     data = request.get_json()
@@ -134,7 +134,7 @@ def add_transaction():
     amount = data.get('amount')
     trans_type = data.get('type')
 
-    # Validate inputs
+   
     if not description or amount is None or not trans_type:
         return jsonify(success=False, message='Description, amount, and type are required'), 400
 
@@ -171,7 +171,7 @@ def get_transactions(user_id):
     try:
         with closing(get_db_connection()) as conn:
             with conn.cursor() as cur:
-                # Fetch transactions for the given user_id
+                
                 cur.execute("""
                     SELECT id, category, amount, type, created_at
                     FROM budget
@@ -180,7 +180,7 @@ def get_transactions(user_id):
                 """, (user_id,))
                 rows = cur.fetchall()
 
-        # Format the response
+        
         transactions = [{
             'id': row[0],
             'category': row[1],
@@ -194,7 +194,7 @@ def get_transactions(user_id):
         return jsonify({"error": "Failed to fetch transactions", "message": str(e)}), 500
 
 
-# Update transaction
+
 @app.route('/update-transaction/<int:id>', methods=['PUT'])
 def update_transaction(id):
     data = request.get_json()
@@ -210,7 +210,7 @@ def update_transaction(id):
         conn = get_db_connection()
         cur = conn.cursor()
 
-        # Update query with correct columns
+        
         update_query = """
             UPDATE budget
             SET amount = %s, category = %s
@@ -224,7 +224,7 @@ def update_transaction(id):
         if updated is None:
             return jsonify({'success': False, 'message': 'Transaction not found'}), 404
 
-        # Convert result to dict for frontend
+    
         transaction = {
             'id': updated[0],
             'category': updated[1],
@@ -241,7 +241,7 @@ def update_transaction(id):
         print("Error updating transaction:", e)
         return jsonify({'success': False, 'message': 'Server error while updating transaction'}), 500
 
-# Delete transaction
+
 @app.route('/delete-transaction/<int:transaction_id>', methods=['DELETE'])
 def delete_transaction(transaction_id):
     try:
