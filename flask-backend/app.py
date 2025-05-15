@@ -118,7 +118,7 @@ def check_user():
                 user = cur.fetchone()
 
         if user and bcrypt.checkpw(password.encode('utf-8'), user[1].encode('utf-8')):
-            return jsonify({'id': user[0]})
+            return jsonify({'id': user[0], 'message': 'Account Found'})
         else:
             return jsonify({'message': 'Invalid credentials'}), 401
     except Exception as e:
